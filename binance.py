@@ -19,17 +19,21 @@ def rest(endpoint, params=''):
     return '%s/%s%s' % (REST_URL, endpoint, params)
 
 
-def get(endpoint, orig_req):
+def _prep(endpoint, orig_req, signed):
     if not orig_req:
         orig_req = {}
 
     req = copy.deepcopy(orig_req)
-    req['timestamp'] = int(time.time() * 1000)
-    req['recvWindow'] = 5000
+
+    if signed:
+        req['timestamp'] = int(time.time() * 1000)
+        req['recvWindow'] = 5000
 
     params = '&'.join(['%s=%s' % (k, quote_plus(str(v))) for k, v in req.items()])
-    signature = hmac.new(secret.BINANCE['API_SECRET'].encode(), params.encode(), hashlib.sha256).hexdigest()
-    params = '%s&signature=%s' % (params, signature)
+
+    if signed:
+        signature = hmac.new(secret.BINANCE['API_SECRET'].encode(), params.encode(), hashlib.sha256).hexdigest()
+        params = '%s&signature=%s' % (params, signature)
     url = rest(endpoint, params)
 
     headers = {
@@ -38,10 +42,12 @@ def get(endpoint, orig_req):
         'User-Agent': 'Mozilla/4.0 (compatible; Python)'
     }
 
-    print(req)
-    print(headers)
     print(url)
+    return url, headers
 
+
+def get(endpoint, orig_req, signed=False):
+    url, headers = _prep(endpoint, orig_req, signed)
     r = requests.get(url, headers=headers)
 
     try:

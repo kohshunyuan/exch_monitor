@@ -1,17 +1,21 @@
 """
 Monitor Binance for new historical trades and email
 
-Note: Binance doesn't allow checking for all symbols so have to pass in a list to check
+Note: Binance doesn't allow checking for all symbols so have to loop. Have to pass in the markets enabled for
 
 Args example:
-    abc@gmail.com 720 ETHBTC KNCETH ZRXETH REQETH OMGETH ASTETH
+    abc@gmail.com 720 ETH
+    abc@gmail.com 720 ETH BTC
+    abc@gmail.com 720 USDT
 
 References:
     https://www.binance.com/restapipub.html
     https://github.com/sammchardy/python-binance/blob/master/binance/client.py
     https://github.com/binance-exchange/node-binance-api/blob/master/node-binance-api.js
+    https://github.com/binance-exchange/binance-official-api-docs/blob/master/rest-api.md
 """
 
+import re
 import argparse
 from datetime import datetime
 
@@ -25,14 +29,17 @@ def _parse_args():
     p = argparse.ArgumentParser(description='Monitor Binance')
     p.add_argument('recipient', help='email recipient')
     p.add_argument('past_seconds', help='the number of seconds before of orders to check', type=int)
-    p.add_argument('symbols', help='symbols to check', nargs='+')
+    p.add_argument('markets', help='symbols to check', nargs='+')
     p.add_argument('--disable', '-d', help='disable running', action='store_true')
     return p.parse_args()
 
 
+def _get_recent_trades(symbols, past_seconds):
+    pass
+
+
 def _get_recent_history(symbol, past_seconds):
-    trades = binance.get('myTrades', {'symbol': symbol, 'limit': 30})
-    print(trades)
+    trades = binance.get('myTrades', {'symbol': symbol, 'limit': 30}, signed=True)
     trades = [t for t in trades if t['time'] >= int(datetime.now().timestamp() * 1000) - past_seconds*1000]
     for t in trades:
         t['symbol'] = symbol
@@ -50,7 +57,7 @@ def _display(historical_trades):
     def colb(contents):
         return col(contents, bold=True)
 
-    body = '<html>%d trade(s) found!<br><br><table border = "1">' % (len(historical_trades),)
+    body = '<html>Yay, %d trade(s) found!<br><br><table border = "1">' % (len(historical_trades),)
     body += row(colb('TradeId')+colb('OrderId')+colb('Timestamp')+colb('Symbol')+colb('Direction')+colb('Price')+colb('Qty')+colb('Est. Value'))
     for t in historical_trades:
         timestamp = datetime.fromtimestamp(t['time']/1000).strftime(common.DATE_FORMAT_TZ)
@@ -66,7 +73,14 @@ def _run(args):
     print('running...')
     try:
         historical_trades = []
-        for symbol in args.symbols:
+
+        pattern = '.*(%s)$' % ('|'.join(args.markets),)
+        print(pattern)
+        symbols = [s['symbol'] for s in binance.get('ticker/price', {}) if re.match(pattern, s['symbol'], re.I)]
+        print('Checking %d symbols' % (len(symbols),))
+
+        # for symbol in args.symbols:
+        for symbol in symbols:
             historical_trades.extend(_get_recent_history(symbol, args.past_seconds))
         historical_trades.sort(key=lambda t: t['time'])
         print(historical_trades)
