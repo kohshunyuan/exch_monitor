@@ -9,6 +9,7 @@ from email.mime.text import MIMEText
 import common
 import secret
 
+EMAIL = True
 
 def email(subject, body, to=None):
     if not common.is_server():
@@ -18,6 +19,9 @@ def email(subject, body, to=None):
     print('\tsubject: %s' % (subject,))
     print('\tbody: %s' % (body,))
     print('\tto: %s' % (to,))
+
+    if not EMAIL:
+        return
 
     username = secret.EMAIL['USERNAME']
     password = secret.EMAIL['PASSWORD']
