@@ -40,44 +40,39 @@ def _get_recent_history(address, past_seconds):
     j = r.json()
     print(j)
     # {
-    #     "ETH_FND": [
-    #         {
-    #             "date": "2018-05-17 16:42:26",
-    #             "amount": "1924",
-    #             "type": "sell",
-    #             "total": "0.700336",
-    #             "price": "0.000364",
-    #             "orderHash": "0xc0becaf2cccab0619f5f3e093b12bb3b7b9d5f939ab882f958f7abba642474f0",
-    #             "uuid": "48303770-59f1-11e8-8e87-0be4c258aaef",
-    #             "buyerFee": "3.848",
-    #             "sellerFee": "0.000700336",
-    #             "gasFee": "7.939560439560438572",
-    #             "timestamp": 1526575346,
-    #             "maker": "0x480a93081ce13050b7a89ca5bb315b87e36905de",
-    #             "taker": "0xa809d1f8df18c5355eb5a972cf70e29202769135",
-    #             "transactionHash": "0x722fc88665840b2dceee0f10f2ecad52101de7afc87edd0cdfdd5b2b208c6e77"
-    #         }
-    #     ],
-    #     "ETH_REN": [
-    #             {
-    #                 "date": "2018-05-17 12:33:32",
-    #                 "amount": "6737.253938212438268165",
-    #                 "type": "buy",
-    #                 "total": "1.158807609999999999",
-    #                 "price": "0.00017199999",
-    #                 "orderHash": "0x2c30ed73f9d1364ff2bec4dd397bc2751c79dbc13503f3379f15b1d8f5008352",
-    #                 "uuid": "82a55b10-59ce-11e8-8e87-0be4c258aaef",
-    #                 "buyerFee": "6.737253938212438268",
-    #                 "sellerFee": "0.00231761522",
-    #                 "gasFee": "0.002209999999999999",
-    #                 "timestamp": 1526560412,
-    #                 "maker": "0x480a93081ce13050b7a89ca5bb315b87e36905de",
-    #                 "taker": "0x53cbbb5676d1075911ac4903e1c2107570cf912b",
-    #                 "transactionHash": "0x86e5925ef50e9e78c9e598b7038104aabebb8e7f6da7a77d680e8de3c0598948"
-    #             },
-    # }
-    #     ]
-    # }
+    # "ETH_TRAC": [
+    #     {
+    #         "date": "2018-05-19 04:33:36",
+    #         "amount": "426.363",
+    #         "type": "buy",
+    #         "total": "0.17226",
+    #         "price": "0.000404021924979419",
+    #         "orderHash": "0x6cbb17383d314bd0eb793e11469eee022b0fa261c137e4d7b2eb17d040b58016",
+    #         "uuid": "cbd65280-5b1d-11e8-8e87-0be4c258aaef",
+    #         "buyerFee": "0.852726",
+    #         "sellerFee": "0.00017226",
+    #         "gasFee": "5.890769418321142306",
+    #         "timestamp": 1526704416,
+    #         "maker": "0xafe248450ef168a21ace2d54fa7c2e3d10a53215",
+    #         "taker": "0xd99ba122ab50b47b2e4fb6f5e205f2dd01c0586d",
+    #         "transactionHash": "0xeb277a7a8b3d640479f327c34602ef8d6c02660f74e013bc1a0f1db0c351550d"
+    #     },
+    #     {
+    #         "date": "2018-05-19 04:25:22",
+    #         "amount": "346.721532102969989892",
+    #         "type": "sell",
+    #         "total": "0.137565121352511833",
+    #         "price": "0.000396759672",
+    #         "orderHash": "0x4b022929586e463679dce4951751d29e8d05bdd7aa9eb88927c1e59e897dd24a",
+    #         "uuid": "a52ad620-5b1c-11e8-8e87-0be4c258aaef",
+    #         "buyerFee": "0.34672153210296999",
+    #         "sellerFee": "0.000275130242705024",
+    #         "gasFee": "0.00238",
+    #         "timestamp": 1526703922,
+    #         "maker": "0xa871b9bc40d6a2c690ac948ba80b17f1a54f8248",
+    #         "taker": "0x15f2fcea05350bc3bd2851566d19af6ed1f59081",
+    #         "transactionHash": "0x64bec0f270acaa73c8941c4a6df4515db3ee682b5d838aec6beb8c05e3ee9321"
+    #     },
 
     historical_trades = []
     for market, trades in j.items():
